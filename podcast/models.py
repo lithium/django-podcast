@@ -489,6 +489,8 @@ class Episode(models.Model):
         ordering = ['-date', 'slug']
 
     def __unicode__(self):
+        if self.episode:
+            return '%s. %s' % (self.episode, self.title)
         return self.title
 
     @models.permalink
