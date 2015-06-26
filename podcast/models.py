@@ -8,6 +8,7 @@ from .managers import EpisodeManager
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 PODCAST_STORAGE = get_storage_class(getattr(settings, 'PODCAST_STORAGE', None))
 
+ENCLOSURE_UPLOAD_TO = getattr(settings, 'PODCAST_ENCLOSURE_UPLOAD_TO', 'podcasts/episodes/files')
 
 class ParentCategory(models.Model):
     """Parent Category model."""
@@ -529,7 +530,7 @@ class Enclosure(models.Model):
         ('SHA-1', 'SHA-1'),
     )
     title = models.CharField(max_length=255, blank=True, help_text='Title is generally only useful with multiple enclosures.')
-    file = models.FileField(upload_to='podcasts/episodes/files/', storage=PODCAST_STORAGE(), help_text='Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.', blank=True, null=True)
+    file = models.FileField(upload_to=ENCLOSURE_UPLOAD_TO, storage=PODCAST_STORAGE(), help_text='Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.', blank=True, null=True)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, default='video/mp4', blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
     expression = models.CharField(max_length=25, blank=True, choices=EXPRESSION_CHOICES, default='Full')
@@ -549,4 +550,4 @@ class Enclosure(models.Model):
         ordering = ['mime', 'file']
 
     def __unicode__(self):
-        return self.file
+        return self.file.name
